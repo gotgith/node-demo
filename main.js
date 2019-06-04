@@ -35,7 +35,7 @@ myButton.addEventListener('click', (e) => {
         body: 'a=1&b=2',
         headers: {
             'content-type': 'application/x-www-form-urlencoded',
-            'JH': '18'
+            'JHH': '18'
         }
     }).then(
         (text) => { console.log(text) },
