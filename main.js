@@ -1,35 +1,46 @@
-window.jQuery = function(nodeOrSelector){
+window.jQuery = function (nodeOrSelector) {
     let nodes = {}
-    nodes.addClass = function(){}
-    nodes.html = function(){}
+    nodes.addClass = function () { }
+    nodes.html = function () { }
     return nodes
 }
 
 window.$ = window.jQuery
 
-window.jQuery.ajax = function({url,method,body,success, fail}) {
-   let  request = new XMLHttpRequest()
-    request.open(method, url)
-    request.onreadystatechange = () => {
-        if(request.readyState === 4){
-            if(request.status >= 200 && request.status <300){
-                success.call(undefined, request.responseText)
-            }else{
-                fail.call(undefined, request)
+window.jQuery.ajax = function ({ url, method, body, headers }) {
+    return new Promise(function (resolve, reject) {
+        let request = new XMLHttpRequest()
+        request.open(method, url) // 配置request
+        for (let key in headers) {
+            let value = headers[key]
+            request.setRequestHeader(key, value)
+        }
+        request.onreadystatechange = () => {
+            if (request.readyState === 4) {
+                if (request.status >= 200 && request.status < 300) {
+                    resolve.call(undefined, request.responseText)
+                } else if (request.status >= 400) {
+                    reject.call(undefined, request)
+                }
             }
         }
-    }
-    request.send(body)
+        request.send(body)
+    })
 }
 
 myButton.addEventListener('click', (e) => {
     window.jQuery.ajax({
-        url: '/xx',
+        url: '/xxx',
         method: 'get',
-        body: 'a=123&b=222',
-        success: (responseText)=>{ console.log(responseText) },
-        failFn: (request)=>{console.log(request)}
-    })
-})
+        body: 'a=1&b=2',
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded',
+            'JH': '18'
+        }
+    }).then(
+        (text) => { console.log(text) },
+        (request) => { console.log(request) }
+    )
 
+})
 
